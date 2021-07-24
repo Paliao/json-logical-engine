@@ -4,7 +4,13 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "dist",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "engine/*": ["engine"],
+      "types/*": ["types"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"]
