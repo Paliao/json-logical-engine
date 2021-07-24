@@ -1,4 +1,4 @@
-import { engineOperatorValidator } from '../operator';
+import { engineOperatorValidator } from '../operators';
 
 import { mockValidOperator, mockInvalidOperator } from './operator.mock';
 

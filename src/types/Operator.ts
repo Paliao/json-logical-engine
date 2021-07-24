@@ -1,18 +1,17 @@
-export interface Operator {
+import Joi, { Schema } from 'joi';
+
+export interface Operator<Args = any> {
   // Name of the operator, is unique and provided by the engine when the config is being mapped
-  readonly name?: string;
+  name?: string;
 
   // A brief description of what this operation is meant to do
   description?: string;
 
-  // Arguments that the operator receives
-  args: any;
-
   // Validates the arguments, and throws error(onFailure) if the correct arguments are not provider
-  argsValidator?: any;
+  argsValidator?: Schema;
 
   // The operation itself
-  operator: (args: any) => any;
+  operator: (args: Args) => any;
 
   // If provided the engine will look in handle the operation as an async operation
   // Defaults to false

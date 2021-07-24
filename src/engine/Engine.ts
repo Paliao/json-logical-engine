@@ -1,5 +1,7 @@
-import { engineOperatorValidator } from './../operator/validators';
+import { defaultOperators } from './../operators/defaultOperators/index';
 import Joi from 'joi';
+
+import { engineOperatorValidator } from '../operators/validators';
 import { EngineConfig, Operator } from 'types';
 
 import { defaultEngineConfig } from './index';
@@ -13,7 +15,7 @@ export class Engine {
     Engine.validateOperators(operators);
     Engine.validateConfig(config);
 
-    this.operators = operators;
+    this.operators = { ...defaultOperators, ...operators };
     this.config = { ...defaultEngineConfig, ...config };
   }
 
