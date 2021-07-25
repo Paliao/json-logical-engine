@@ -4,6 +4,10 @@ import {
   mockTrueGtOperation,
   mockTrueGteOperation,
   mockFalseGteOperation,
+  mockTrueLtOperation,
+  mockFalseLtOperation,
+  mockTrueLteOperation,
+  mockFalseLteOperation,
 } from './numericComparations.mock';
 
 describe('Default operations', () => {
@@ -39,33 +43,33 @@ describe('Default operations', () => {
     });
   });
 
-  describe('gtOperator', () => {
-    it('should be a true gtOperation', async () => {
+  describe('ltOperator', () => {
+    it('should be a true lt operation', async () => {
       const engine = new Engine({}, {});
-      const result = await engine.runOperation(mockTrueGtOperation);
+      const result = await engine.runOperation(mockTrueLtOperation);
 
       expect(result).toBeTruthy();
     });
 
-    it('should be a false gtOperation', async () => {
+    it('should be a false lt operation', async () => {
       const engine = new Engine({}, {});
-      const result = await engine.runOperation(mockFalseGtOperation);
+      const result = await engine.runOperation(mockFalseLtOperation);
 
       expect(result).toBeFalsy();
     });
   });
 
-  describe('gteOperator', () => {
-    it('should be a true gteOperation', async () => {
+  describe('lteOperator', () => {
+    it('should be a true lte operation', async () => {
       const engine = new Engine({}, {});
-      const result = await engine.runOperation(mockTrueGteOperation);
+      const result = await engine.runOperation(mockTrueLteOperation);
 
       expect(result).toBeTruthy();
     });
 
-    it('should be a false gteOperation', async () => {
+    it('should be a false lte operation', async () => {
       const engine = new Engine({}, {});
-      const result = await engine.runOperation(mockFalseGteOperation);
+      const result = await engine.runOperation(mockFalseLteOperation);
 
       expect(result).toBeFalsy();
     });

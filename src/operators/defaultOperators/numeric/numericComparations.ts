@@ -23,3 +23,25 @@ export const gteOperator: Operator<NumberComparationArgs> = {
     return firstNumber >= secondNumber;
   },
 };
+
+export const ltOperator: Operator<NumberComparationArgs> = {
+  name: 'lt',
+  description: 'Checks if the first argument is less than the second one',
+  argsValidator: numberComparationValidator,
+  handler: ({ numbers }) => {
+    const [firstNumber, secondNumber] = numbers;
+
+    return firstNumber < secondNumber;
+  },
+};
+
+export const lteOperator: Operator<NumberComparationArgs> = {
+  name: 'lte',
+  description: 'Checks if the first argument is less than OR equal to the second one',
+  argsValidator: numberComparationValidator,
+  handler: ({ numbers }) => {
+    const [firstNumber, secondNumber] = numbers;
+
+    return firstNumber <= secondNumber;
+  },
+};
