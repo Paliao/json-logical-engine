@@ -1,6 +1,8 @@
+import { get, isArray, isPlainObject, set } from 'lodash';
+import Joi from 'joi';
+
 import { operationValidator } from './../operators/validators';
 import { defaultOperators } from './../operators/defaultOperators/index';
-import Joi from 'joi';
 
 import { engineOperatorValidator } from '../operators/validators';
 import { EngineConfig, Operation, Operator } from 'types';
@@ -53,7 +55,7 @@ export class Engine {
     }
 
     try {
-      const input = this.mountOperatorInput(operation.args);
+      const input = await this.mountOperatorInput(operation.args);
 
       if (operator.argsValidator) {
         const { error } = operator.argsValidator.validate(input);
@@ -71,7 +73,46 @@ export class Engine {
     }
   }
 
-  mountOperatorInput(args: Operation['args']): Record<string, any> {
-    return args;
+  async mountOperatorInput(args: any): Promise<Record<string, any>> {
+    const argsType = typeof args;
+
+    if (['boolean', 'number', 'string'].includes(argsType)) {
+      return args;
+    }
+
+    const argsIsArray = isArray(args);
+    if (argsIsArray) {
+      const result = [];
+
+      for (const arg of args) {
+        const operationResult = await this.mountOperatorInput(arg);
+
+        result.push(operationResult);
+      }
+
+      return result;
+    }
+
+    const argsIsObject = isPlainObject(args);
+    // If it's not string, number, boolean, array nor object, is not an allowed type
+    if (!argsIsObject) {
+      throw new Error(`This type is not allowed ${args}`);
+    }
+
+    const isOperation = get(args, 'operator');
+    if (isOperation) {
+      return this.runOperation(args);
+    }
+
+    const result: Record<string, any> = {};
+
+    const objectEntries = Object.entries(args);
+    for (const [key, val] of objectEntries) {
+      const value = await this.mountOperatorInput(val);
+
+      set(result, [key], value);
+    }
+
+    return result;
   }
 }

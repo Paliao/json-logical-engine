@@ -1,6 +1,11 @@
 import { mockTrueGtOperation } from './operations/numeric/numericComparations.mock';
 import { Engine } from '../engine';
-import { mockInvalidEngineConfig, mockValidEngineConfig } from './engine.mock';
+import {
+  mockInvalidEngineConfig,
+  mockNestedOperationDepth1,
+  mockNestedOperationDepth1WithMixedArgs,
+  mockValidEngineConfig,
+} from './engine.mock';
 
 import { mockValidOperator, mockInvalidOperator } from './operator.mock';
 
@@ -67,20 +72,35 @@ describe('Engine validators', () => {
   });
 });
 
-describe('Engine run operation', () => {
-  it('should throw operation not found', async () => {
-    const engine = new Engine({}, {});
+describe('Engine run simple operation', () => {
+  const engine = new Engine({}, {});
 
+  it('should throw operation not found', async () => {
     const result = await engine.runOperation({ operator: 'notFound', args: {} }).catch((e) => e);
 
     expect(result).toBeInstanceOf(Error);
   });
 
   it('should throw wrong format input', async () => {
-    const engine = new Engine({}, {});
-
     const result = await engine.runOperation({ operator: 'gt', args: { numbers: [] } }).catch((e) => e);
 
     expect(result).toBeInstanceOf(Error);
+  });
+});
+
+describe('Run nested operation', () => {
+  const engine = new Engine({}, {});
+  describe('Depth 1', () => {
+    it('should be a valid nested operation with a false result', async () => {
+      const result = await engine.runOperation(mockNestedOperationDepth1);
+
+      expect(result).toBe(false);
+    });
+
+    it('should be a valid nested operation with mixed args and a true result', async () => {
+      const result = await engine.runOperation(mockNestedOperationDepth1WithMixedArgs);
+
+      expect(result).toBe(true);
+    });
   });
 });
