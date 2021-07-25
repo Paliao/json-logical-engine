@@ -1,3 +1,3 @@
-export interface GtOperatorArgs {
+export interface NumberComparationArgs {
   numbers: number[];
 }

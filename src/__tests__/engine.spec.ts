@@ -75,4 +75,12 @@ describe('Engine run operation', () => {
 
     expect(result).toBeInstanceOf(Error);
   });
+
+  it('should throw wrong format input', async () => {
+    const engine = new Engine({}, {});
+
+    const result = await engine.runOperation({ operator: 'gt', args: { numbers: [] } }).catch((e) => e);
+
+    expect(result).toBeInstanceOf(Error);
+  });
 });

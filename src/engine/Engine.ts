@@ -54,11 +54,21 @@ export class Engine {
 
     try {
       const input = this.mountOperatorInput(operation.args);
-      // todo: validate input before calling the handler
+
+      if (operator.argsValidator) {
+        const { error } = operator.argsValidator.validate(input);
+
+        if (error) {
+          throw new Error(`Operation ${operator.name} was provided wrong format`);
+        }
+      }
+
       const result = await operator.handler(input);
 
       return result;
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   mountOperatorInput(args: Operation['args']): Record<string, any> {
