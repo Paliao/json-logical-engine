@@ -3,9 +3,6 @@ export const mockFalseGtOperation = {
   args: {
     numbers: [1, 2],
   },
-
-  // onSucess: [],
-  // onFailure: [],
 };
 
 export const mockTrueGtOperation = {
@@ -13,7 +10,18 @@ export const mockTrueGtOperation = {
   args: {
     numbers: [2, 1],
   },
+};
 
-  // onSucess: [],
-  // onFailure: [],
+export const mockFalseGteOperation = {
+  operator: 'gte',
+  args: {
+    numbers: [1, 2],
+  },
+};
+
+export const mockTrueGteOperation = {
+  operator: 'gte',
+  args: {
+    numbers: [2, 2],
+  },
 };

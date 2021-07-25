@@ -1,5 +1,5 @@
 import { Engine } from './../../engine/Engine';
-import { mockFalseGtOperation, mockTrueGtOperation } from './numeric.mock';
+import { mockFalseGtOperation, mockTrueGtOperation, mockTrueGteOperation, mockFalseGteOperation } from './numeric.mock';
 
 describe('Default operations', () => {
   describe('gtOperator', () => {
@@ -13,6 +13,22 @@ describe('Default operations', () => {
     it('should be a false gtOperation', async () => {
       const engine = new Engine({}, {});
       const result = await engine.runOperation(mockFalseGtOperation);
+
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('gteOperator', () => {
+    it('should be a true gteOperation', async () => {
+      const engine = new Engine({}, {});
+      const result = await engine.runOperation(mockTrueGteOperation);
+
+      expect(result).toBeTruthy();
+    });
+
+    it('should be a false gteOperation', async () => {
+      const engine = new Engine({}, {});
+      const result = await engine.runOperation(mockFalseGteOperation);
 
       expect(result).toBeFalsy();
     });
