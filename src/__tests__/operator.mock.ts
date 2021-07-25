@@ -2,7 +2,7 @@ import { Operator } from '../types';
 
 export const mockValidOperator: Operator = {
   name: 'test',
-  operator: () => {},
+  handler: () => {},
   isAsync: true,
   enableLogging: true,
 };

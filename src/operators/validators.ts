@@ -8,7 +8,7 @@ export const operationValidator = Joi.object({
 export const engineOperatorValidator = Joi.object({
   name: Joi.string().optional(),
   description: Joi.string().optional(),
-  operator: Joi.function().required(),
+  handler: Joi.function().required(),
   isAsync: Joi.boolean().optional(),
   enableLogging: Joi.boolean().optional(),
 }).required();

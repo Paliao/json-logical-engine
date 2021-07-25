@@ -3,6 +3,7 @@ import { Engine } from '../engine';
 import {
   mockInvalidEngineConfig,
   mockNestedOperationDepth1,
+  mockNestedOperationDepth1WithInvalidInput,
   mockNestedOperationDepth1WithMixedArgs,
   mockValidEngineConfig,
 } from './engine.mock';
@@ -59,15 +60,15 @@ describe('Engine validators', () => {
 
   describe('engine operations validator', () => {
     it('should be a valid operation config', () => {
-      const validateOperators = () => Engine.validateOperation(mockTrueGtOperation);
+      const validateOperations = () => Engine.validateOperation(mockTrueGtOperation);
 
-      expect(validateOperators).not.toThrow();
+      expect(validateOperations).not.toThrow();
     });
 
     it('should not be a valid operation config', () => {
-      const validateOperators = () => Engine.validateOperation({ operator: '', args: {} });
+      const validateOperations = () => Engine.validateOperation({ operator: '', args: {} });
 
-      expect(validateOperators).toThrow();
+      expect(validateOperations).toThrow();
     });
   });
 });
@@ -101,6 +102,11 @@ describe('Run nested operation', () => {
       const result = await engine.runOperation(mockNestedOperationDepth1WithMixedArgs);
 
       expect(result).toBe(true);
+    });
+
+    it('should throw an invalid input error', async () => {
+      const result = await engine.runOperation(mockNestedOperationDepth1WithInvalidInput).catch((e) => e);
+      expect(result).toBeInstanceOf(Error);
     });
   });
 });
