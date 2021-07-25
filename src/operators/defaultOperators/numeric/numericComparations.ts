@@ -1,11 +1,11 @@
 import { NumberComparationArgs, Operator } from 'types';
 
-import { numberComparationValidator } from './validators';
+import { twoNumbersListValidator } from './validators';
 
 export const gtOperator: Operator<NumberComparationArgs> = {
   name: 'gt',
   description: 'Checks if the first argument is greater than the second one',
-  argsValidator: numberComparationValidator,
+  argsValidator: twoNumbersListValidator,
   handler: ({ numbers }) => {
     const [firstNumber, secondNumber] = numbers;
 
@@ -16,7 +16,7 @@ export const gtOperator: Operator<NumberComparationArgs> = {
 export const gteOperator: Operator<NumberComparationArgs> = {
   name: 'gte',
   description: 'Checks if the first argument is greater than OR equal to the second one',
-  argsValidator: numberComparationValidator,
+  argsValidator: twoNumbersListValidator,
   handler: ({ numbers }) => {
     const [firstNumber, secondNumber] = numbers;
 
@@ -27,7 +27,7 @@ export const gteOperator: Operator<NumberComparationArgs> = {
 export const ltOperator: Operator<NumberComparationArgs> = {
   name: 'lt',
   description: 'Checks if the first argument is less than the second one',
-  argsValidator: numberComparationValidator,
+  argsValidator: twoNumbersListValidator,
   handler: ({ numbers }) => {
     const [firstNumber, secondNumber] = numbers;
 
@@ -38,7 +38,7 @@ export const ltOperator: Operator<NumberComparationArgs> = {
 export const lteOperator: Operator<NumberComparationArgs> = {
   name: 'lte',
   description: 'Checks if the first argument is less than OR equal to the second one',
-  argsValidator: numberComparationValidator,
+  argsValidator: twoNumbersListValidator,
   handler: ({ numbers }) => {
     const [firstNumber, secondNumber] = numbers;
 
