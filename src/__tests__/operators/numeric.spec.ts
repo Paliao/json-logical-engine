@@ -1,4 +1,4 @@
-import { gtOperator } from '../../operators/defaultOperators/numeric';
+import { gtOperator } from '../../operators/defaultOperators/numeric/numericComparations';
 
 describe('Default operators', () => {
   describe('Gt operator', () => {

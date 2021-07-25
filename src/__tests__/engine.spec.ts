@@ -1,4 +1,4 @@
-import { mockTrueGtOperation } from './operations/numeric.mock';
+import { mockTrueGtOperation } from './operations/numericComparations.mock';
 import { Engine } from '../engine';
 import { mockInvalidEngineConfig, mockValidEngineConfig } from './engine.mock';
 
