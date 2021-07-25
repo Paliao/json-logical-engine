@@ -1,5 +1,5 @@
-import * as numericOperators from './numeric';
+import { gtOperator } from './numeric';
 
 export const defaultOperators = {
-  ...numericOperators,
+  gt: gtOperator,
 };

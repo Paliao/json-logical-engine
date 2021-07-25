@@ -1,6 +1,6 @@
 import { gtOperator } from '../../operators/defaultOperators/numeric';
 
-describe('Default operations', () => {
+describe('Default operators', () => {
   describe('Gt operator', () => {
     describe('Gt operator validator', () => {
       it('should invalid arguments input', () => {
@@ -27,13 +27,13 @@ describe('Default operations', () => {
       });
     });
     it('should be a true gt operation', () => {
-      const result = gtOperator.operator({ numbers: [2, 1] });
+      const result = gtOperator.handler({ numbers: [2, 1] });
 
       expect(result).toBeTruthy();
     });
 
     it('should be a false gt operation', () => {
-      const result = gtOperator.operator({ numbers: [1, 2] });
+      const result = gtOperator.handler({ numbers: [1, 2] });
 
       expect(result).toBeFalsy();
     });

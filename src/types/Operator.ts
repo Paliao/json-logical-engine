@@ -11,7 +11,7 @@ export interface Operator<Args = any> {
   argsValidator?: Schema;
 
   // The operation itself
-  operator: (args: Args) => any;
+  handler: (args: Args) => any;
 
   // If provided the engine will look in handle the operation as an async operation
   // Defaults to false

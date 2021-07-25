@@ -1,3 +1,4 @@
+import { mockTrueGtOperation } from './operations/numeric.mock';
 import { Engine } from '../engine';
 import { mockInvalidEngineConfig, mockValidEngineConfig } from './engine.mock';
 
@@ -25,36 +26,53 @@ describe('Engine validators', () => {
     });
   });
 
-  it('should be a valid operators config', () => {
-    const validateOperators = () =>
-      Engine.validateOperators({
-        test: mockValidOperator,
-      });
+  describe('engine operators validator', () => {
+    it('should be a valid operators config', () => {
+      const validateOperators = () =>
+        Engine.validateOperators({
+          test: mockValidOperator,
+        });
 
-    expect(validateOperators).not.toThrow();
+      expect(validateOperators).not.toThrow();
+    });
+
+    it('should not be a valid operators config', () => {
+      const validateOperators = () =>
+        Engine.validateOperators({
+          test: mockInvalidOperator,
+        });
+
+      expect(validateOperators).toThrow();
+    });
+
+    it('should not be a valid operators object', () => {
+      const validateOperators = () => Engine.validateOperators(null);
+
+      expect(validateOperators).toThrow();
+    });
   });
 
-  it('should be a valid operators config', () => {
-    const validateOperators = () =>
-      Engine.validateOperators({
-        test: mockValidOperator,
-      });
+  describe('engine operations validator', () => {
+    it('should be a valid operation config', () => {
+      const validateOperators = () => Engine.validateOperation(mockTrueGtOperation);
 
-    expect(validateOperators).not.toThrow();
+      expect(validateOperators).not.toThrow();
+    });
+
+    it('should not be a valid operation config', () => {
+      const validateOperators = () => Engine.validateOperation({ operator: '', args: {} });
+
+      expect(validateOperators).toThrow();
+    });
   });
+});
 
-  it('should not be a valid operators config', () => {
-    const validateOperators = () =>
-      Engine.validateOperators({
-        test: mockInvalidOperator,
-      });
+describe('Engine run operation', () => {
+  it('should throw operation not found', async () => {
+    const engine = new Engine({}, {});
 
-    expect(validateOperators).toThrow();
-  });
+    const result = await engine.runOperation({ operator: 'notFound', args: {} }).catch((e) => e);
 
-  it('should not be a valid operators object', () => {
-    const validateOperators = () => Engine.validateOperators(null);
-
-    expect(validateOperators).toThrow();
+    expect(result).toBeInstanceOf(Error);
   });
 });

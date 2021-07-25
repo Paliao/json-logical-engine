@@ -1,7 +1,7 @@
 import { EngineConfig } from 'types';
 
 export const defaultEngineConfig: EngineConfig = {
-  enableLogging: true,
+  enableLogging: false,
 };
 
 export { Engine } from './Engine';

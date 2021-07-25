@@ -1,8 +1,9 @@
+import { operationValidator } from './../operators/validators';
 import { defaultOperators } from './../operators/defaultOperators/index';
 import Joi from 'joi';
 
 import { engineOperatorValidator } from '../operators/validators';
-import { EngineConfig, Operator } from 'types';
+import { EngineConfig, Operation, Operator } from 'types';
 
 import { defaultEngineConfig } from './index';
 import { engineConfigValidator } from './vallidators';
@@ -33,5 +34,34 @@ export class Engine {
     if (result.error) {
       throw new Error('Invalid operators config');
     }
+  }
+
+  static validateOperation(operation: Operation) {
+    const result = operationValidator.validate(operation, { abortEarly: true });
+
+    if (result.error) {
+      throw result.error;
+    }
+  }
+
+  async runOperation(operation: Operation) {
+    Engine.validateOperation(operation);
+
+    const operator = this.operators[operation.operator];
+    if (!operator) {
+      throw new Error('Operator not found');
+    }
+
+    try {
+      const input = this.mountOperatorInput(operation.args);
+      // todo: validate input before calling the handler
+      const result = await operator.handler(input);
+
+      return result;
+    } catch (error) {}
+  }
+
+  mountOperatorInput(args: Operation['args']): Record<string, any> {
+    return args;
   }
 }
