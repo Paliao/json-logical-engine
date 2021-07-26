@@ -114,15 +114,15 @@ export class Engine {
 
     const argsIsArray = isArray(args);
     if (argsIsArray) {
-      const result = [];
+      const resultArray = [];
 
       for (const arg of args) {
         const operationResult = await this.mountOperatorInput(arg, context);
 
-        result.push(operationResult);
+        resultArray.push(operationResult);
       }
 
-      return result;
+      return resultArray;
     }
 
     const argsIsObject = isPlainObject(args);

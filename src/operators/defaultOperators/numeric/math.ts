@@ -7,7 +7,7 @@ export const addOperator: Operator<NumberComparationArgs> = {
   description: 'Add a list of numbers',
   argsValidator: unlimittedNumbersListValidator,
   handler: ({ numbers }) => {
-    return numbers.reduce((prev, number) => prev + number, 0);
+    return numbers.reduce((prev, n) => prev + n, 0);
   },
 };
 
@@ -27,7 +27,7 @@ export const multiplyOperator: Operator<NumberComparationArgs> = {
   description: 'Multiplies a list of numbers',
   argsValidator: unlimittedNumbersListValidator,
   handler: ({ numbers }) => {
-    return numbers.reduce((prev, number) => prev * number, 1);
+    return numbers.reduce((prev, n) => prev * n, 1);
   },
 };
 
