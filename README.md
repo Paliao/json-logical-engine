@@ -31,20 +31,32 @@ We have 3 main components that you need to understand:
 
 ## Pre built operators
 
-We have a set of pre built opreators
+We have a set of pre built opreators:
 
-### Math Operations
+### Logic Operations
 
-`add: ` Adds a list of numbers  
-`subtract: ` Subtracts two numbers  
-`divide: ` Divides one number by other  
-`multiply: ` Multiplies a list of numbers
+`if:` If the operations  
+`eq:` Deep equality check  
+`neq:` Negation of the deep equality check  
+`or:` || Behaviour
+`and:` && Behaviour
 
 ---
 
-### Numeric Comparators
+### Arithmetic Operations
 
-`gt: ` Greater than  
-`gte: ` Greater than or equal  
-`lt: ` Less than  
-`lte: ` Less than or equal
+`add:` Adds a list of numbers  
+`subtract:` Subtracts two numbers  
+`divide:` Divides one number by other  
+`multiply:` Multiplies a list of numbers
+
+---
+
+### Numeric Operations
+
+`gt:` Greater than  
+`gte:` Greater than or equal  
+`lt:` Less than  
+`lte:` Less than or equal
+
+---
