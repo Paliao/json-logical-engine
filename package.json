@@ -2,18 +2,28 @@
   "name": "json-logical-engine",
   "author": "Paliao<andre_paliao@hotmail.com",
   "version": "1.0.0",
-  "description": "TODO...",
-  "main": "index.js",
+  "description": "A simple, powerful, and clean way to handle complex operations that can be defined through a JSON",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "tslint -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "files": [
     "dist/**/*"
   ],
-  "keywords": [],
+  "keywords": [
+    "json",
+    "json-logic",
+    "engine",
+    "json-logical-engine"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.24",
