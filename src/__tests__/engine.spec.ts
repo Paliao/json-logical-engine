@@ -138,7 +138,7 @@ describe('Run nested operation', () => {
     it('should be a valid nested operation with a false result', async () => {
       const result = await engine.runOperation(mockOnResultOperation);
 
-      expect(result).toBe(200);
+      expect(result).toBe(375);
     });
   });
 });

@@ -89,18 +89,11 @@ export const mockOnResultOperation: Operation = {
       75,
     ],
   },
-  // Result 275
   onResult: {
     onTruthy: {
       operator: 'add',
       args: {
-        numbers: [100, 100],
-      },
-    },
-    onFalsy: {
-      operator: 'subtract',
-      args: {
-        numbers: [100, 50],
+        numbers: ['$ctx.prev.result', 100],
       },
     },
   },
