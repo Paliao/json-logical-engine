@@ -2,9 +2,11 @@ import { mockTrueGtOperation } from './operations/numeric/numericComparations.mo
 import { Engine } from '../engine';
 import {
   mockInvalidEngineConfig,
+  mockInvalidOnResultOperation,
   mockNestedOperationDepth1,
   mockNestedOperationDepth1WithInvalidInput,
   mockNestedOperationDepth1WithMixedArgs,
+  mockOnResultOperation,
   mockValidEngineConfig,
 } from './engine.mock';
 
@@ -58,17 +60,39 @@ describe('Engine validators', () => {
     });
   });
 
-  describe('engine operations validator', () => {
-    it('should be a valid operation config', () => {
-      const validateOperations = () => Engine.validateOperation(mockTrueGtOperation);
+  describe('Engine operations validator', () => {
+    describe('Simple operation', () => {
+      it('should be a valid operation config', () => {
+        const validateOperations = () => Engine.validateOperation(mockTrueGtOperation);
 
-      expect(validateOperations).not.toThrow();
+        expect(validateOperations).not.toThrow();
+      });
+
+      it('should not be a valid operation config', () => {
+        const validateOperations = () => Engine.validateOperation({ operator: '', args: {} });
+
+        expect(validateOperations).toThrow();
+      });
     });
 
-    it('should not be a valid operation config', () => {
-      const validateOperations = () => Engine.validateOperation({ operator: '', args: {} });
+    describe('onResult operation', () => {
+      it('should be a valid operation config with a onTruthy operation', () => {
+        const validateOperations = () => Engine.validateOperation(mockOnResultOperation);
 
-      expect(validateOperations).toThrow();
+        expect(validateOperations).not.toThrow();
+      });
+
+      it('should be a valid operation config with a onFalsy operation', () => {
+        const validateOperations = () => Engine.validateOperation(mockOnResultOperation);
+
+        expect(validateOperations).not.toThrow();
+      });
+
+      it('should not be a valid operation config within result', () => {
+        const validateOperations = () => Engine.validateOperation(mockInvalidOnResultOperation);
+
+        expect(validateOperations).toThrow();
+      });
     });
   });
 });
@@ -107,6 +131,14 @@ describe('Run nested operation', () => {
     it('should throw an invalid input error', async () => {
       const result = await engine.runOperation(mockNestedOperationDepth1WithInvalidInput).catch((e) => e);
       expect(result).toBeInstanceOf(Error);
+    });
+  });
+
+  describe('On result', () => {
+    it('should be a valid nested operation with a false result', async () => {
+      const result = await engine.runOperation(mockOnResultOperation);
+
+      expect(result).toBe(200);
     });
   });
 });

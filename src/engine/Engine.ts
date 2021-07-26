@@ -1,14 +1,13 @@
 import { get, isArray, isPlainObject, set } from 'lodash';
 import Joi from 'joi';
 
-import { operationValidator } from './../operators/validators';
 import { defaultOperators } from './../operators/defaultOperators/index';
 
 import { engineOperatorValidator } from '../operators/validators';
 import { EngineConfig, Operation, Operator } from 'types';
 
 import { defaultEngineConfig } from './index';
-import { engineConfigValidator } from './vallidators';
+import { engineConfigValidator, operationValidator } from './vallidators';
 
 export class Engine {
   config: EngineConfig;
@@ -46,7 +45,7 @@ export class Engine {
     }
   }
 
-  async runOperation(operation: Operation) {
+  async runOperation(operation: Operation): Promise<any> {
     Engine.validateOperation(operation);
 
     const operator = this.operators[operation.operator];
@@ -66,6 +65,14 @@ export class Engine {
       }
 
       const result = await operator.handler(input);
+
+      if (result && operation.onResult?.onTruthy) {
+        return this.runOperation(operation.onResult?.onTruthy);
+      }
+
+      if (!result && operation.onResult?.onFalsy) {
+        return this.runOperation(operation.onResult?.onFalsy);
+      }
 
       return result;
     } catch (error) {

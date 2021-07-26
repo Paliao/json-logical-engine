@@ -1,4 +1,4 @@
-import { EngineConfig } from '../types';
+import { EngineConfig, Operation } from '../types';
 
 export const mockValidEngineConfig: EngineConfig = {
   enableLogging: true,
@@ -8,7 +8,7 @@ export const mockInvalidEngineConfig = {
   empty: true,
 };
 
-export const mockNestedOperationDepth1 = {
+export const mockNestedOperationDepth1: Operation = {
   operator: 'gt',
   args: {
     numbers: [
@@ -48,7 +48,7 @@ export const mockNestedOperationDepth1WithInvalidInput = {
   },
 };
 
-export const mockNestedOperationDepth1WithMixedArgs = {
+export const mockNestedOperationDepth1WithMixedArgs: Operation = {
   operator: 'gte',
   args: {
     numbers: [
@@ -60,5 +60,48 @@ export const mockNestedOperationDepth1WithMixedArgs = {
       },
       75,
     ],
+  },
+};
+
+export const mockInvalidOnResultOperation = {
+  operator: 'gt',
+  args: {
+    numbers: [10, 75],
+  },
+  // Result 275
+  onResult: {
+    onFalsy: {
+      empty: true,
+    },
+  },
+};
+
+export const mockOnResultOperation: Operation = {
+  operator: 'add',
+  args: {
+    numbers: [
+      {
+        operator: 'add',
+        args: {
+          numbers: [100, 50, 50],
+        },
+      },
+      75,
+    ],
+  },
+  // Result 275
+  onResult: {
+    onTruthy: {
+      operator: 'add',
+      args: {
+        numbers: [100, 100],
+      },
+    },
+    onFalsy: {
+      operator: 'subtract',
+      args: {
+        numbers: [100, 50],
+      },
+    },
   },
 };
