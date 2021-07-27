@@ -98,3 +98,17 @@ export const mockOnResultOperation: Operation = {
     },
   },
 };
+
+export const mockOperationDataContext: Operation = {
+  operator: 'add',
+  args: {
+    numbers: [100, 50, '$ctx.data.number'],
+  },
+};
+
+export const mockOperationEnvContext: Operation = {
+  operator: 'add',
+  args: {
+    numbers: [100, 50, '$ctx.env.number'],
+  },
+};

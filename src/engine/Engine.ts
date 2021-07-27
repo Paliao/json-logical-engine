@@ -103,7 +103,7 @@ export class Engine {
     const argsType = typeof args;
 
     if (argsType === 'string') {
-      if (args.startsWith('$ctx.')) return get({ $ctx: context }, args);
+      if (args.startsWith('$ctx.')) return get({ $ctx: { ...context, env: this.config.env } }, args);
 
       return args;
     }

@@ -7,6 +7,8 @@ import {
   mockNestedOperationDepth1WithInvalidInput,
   mockNestedOperationDepth1WithMixedArgs,
   mockOnResultOperation,
+  mockOperationDataContext,
+  mockOperationEnvContext,
   mockValidEngineConfig,
 } from './engine.mock';
 
@@ -134,11 +136,31 @@ describe('Run nested operation', () => {
     });
   });
 
-  describe('On result', () => {
-    it('should be a valid nested operation with a false result', async () => {
+  describe('Using $ctx', () => {
+    it('should be a valid nested operation using the previous result', async () => {
       const result = await engine.runOperation(mockOnResultOperation);
 
       expect(result).toBe(375);
+    });
+
+    it('should be a valid nested operation using the provided data to the operation', async () => {
+      const result = await engine.runOperation(mockOperationDataContext, { number: 50 });
+
+      expect(result).toBe(200);
+    });
+
+    it('should be a valid nested operation using the provided data to the operation', async () => {
+      const engine2 = new Engine(
+        {},
+        {
+          env: {
+            number: 10,
+          },
+        },
+      );
+      const result = await engine2.runOperation(mockOperationEnvContext);
+
+      expect(result).toBe(160);
     });
   });
 });
