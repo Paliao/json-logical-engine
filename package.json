@@ -1,10 +1,9 @@
 {
   "name": "json-logical-engine",
   "author": "Paliao<andre_paliao@hotmail.com>",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A simple, powerful, and clean way to handle complex operations that can be defined through a JSON",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*"
