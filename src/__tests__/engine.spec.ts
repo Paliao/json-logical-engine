@@ -1,3 +1,4 @@
+import { defaultOperators } from './../operators/defaultOperators/index';
 import { mockTrueGtOperation } from './operations/numeric/numericComparations.mock';
 import { Engine } from '../engine';
 import {
@@ -96,6 +97,62 @@ describe('Engine validators', () => {
         expect(validateOperations).toThrow();
       });
     });
+  });
+});
+
+describe('Engine operators aux functions', () => {
+  const engine = new Engine({}, {});
+
+  it('Checks every default operation', () => {
+    const defaultOperatorsKeys = Object.keys(defaultOperators);
+    const engineOperationsKeys = engine.getOperatorList().map((op) => op.operator);
+
+    expect(defaultOperatorsKeys).toEqual(engineOperationsKeys);
+  });
+
+  it('Checks the addition of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const testOperator = {
+      name: 'test',
+      description: 'test',
+      handler: () => {},
+    };
+
+    engine2.addOperators({
+      testOperator,
+    });
+
+    const hasTestOperator = engine2.getOperatorList().some((op) => op.operator === 'testOperator');
+
+    expect(hasTestOperator).toBeTruthy();
+  });
+
+  it('Checks the addition of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const testOperator = {
+      name: 'test',
+      description: 'test',
+      handler: () => {},
+    };
+
+    engine2.addOperators({
+      testOperator,
+    });
+
+    const hasTestOperator = engine2.getOperatorList().some((op) => op.operator === 'testOperator');
+
+    expect(hasTestOperator).toBeTruthy();
+  });
+
+  it('Checks the removal of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const availableOperators = engine2.getOperatorList().map((op) => op.operator);
+    engine2.removeOperators(availableOperators);
+
+    expect(engine2.getOperatorList().length).toBe(0);
   });
 });
 

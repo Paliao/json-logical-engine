@@ -54,6 +54,32 @@ export class Engine {
     }
   }
 
+  getOperatorList(): Record<'operator' | 'name' | 'description', string>[] {
+    const operators = Object.entries(this.operators);
+
+    return operators.map(([operatorKey, operator]) => ({
+      operator: operatorKey,
+      name: operator?.name ?? 'Name not provided',
+      description: operator?.description ?? 'Description not provided',
+    }));
+  }
+
+  addOperators(newOperators: Record<string, Operator>): void {
+    Engine.validateOperators(newOperators);
+
+    this.operators = { ...this.operators, ...newOperators };
+  }
+
+  removeOperators(operatorKeys: string[]): void {
+    const oldOperators = cloneDeep(this.operators);
+
+    for (const operatorKey of operatorKeys) {
+      delete oldOperators[operatorKey];
+    }
+
+    this.operators = oldOperators;
+  }
+
   public async runOperation(operation: Operation, dataSource: Record<string, any> = {}): Promise<any> {
     try {
       return this.executeOperation(operation, { data: dataSource, env: this.config.env, prev: {} });
@@ -126,7 +152,6 @@ export class Engine {
     }
 
     const argsIsObject = isPlainObject(args);
-    // If it's not string, number, boolean, array nor object, is not an allowed type
     if (!argsIsObject) {
       throw new Error(`This type is not allowed ${args}`);
     }
