@@ -93,7 +93,15 @@ export const mockOnResultOperation: Operation = {
     onTruthy: {
       operator: 'add',
       args: {
-        numbers: ['$ctx.prev.result', 100],
+        numbers: ['$ctx.prev.0.result', 100],
+      },
+      onResult: {
+        onTruthy: {
+          operator: 'lt',
+          args: {
+            numbers: ['$ctx.prev.1.result', '$ctx.prev.0.result'],
+          },
+        },
       },
     },
   },

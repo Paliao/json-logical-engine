@@ -198,7 +198,7 @@ describe('Run nested operation', () => {
     it('should be a valid nested operation using the previous result', async () => {
       const result = await engine.runOperation(mockOnResultOperation);
 
-      expect(result).toBe(375);
+      expect(result).toBe(true);
     });
 
     it('should be a valid nested operation using the provided data to the operation', async () => {

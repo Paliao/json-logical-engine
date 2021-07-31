@@ -14,7 +14,7 @@ interface OperationContext {
   prev: {
     args?: Record<string, any>;
     result?: any;
-  };
+  }[];
   env: EngineConfig['env'];
 }
 
@@ -86,7 +86,7 @@ export class Engine {
 
   public async runOperation(operation: Operation, dataSource: Record<string, any> = {}): Promise<any> {
     try {
-      return this.executeOperation(operation, { data: dataSource, env: this.config.env, prev: {} });
+      return this.executeOperation(operation, { data: dataSource, env: this.config.env, prev: [] });
     } catch (error) {
       throw new Error(error);
     }
@@ -112,10 +112,13 @@ export class Engine {
 
     // Checking if we have nested operations
     if (operation.onResult?.onFalsy || operation.onResult?.onTruthy) {
-      set(context, ['prev'], {
+      const previous = cloneDeep(context.prev);
+      previous.unshift({
         result,
         args: input,
       });
+
+      set(context, ['prev'], previous);
 
       if (result && operation.onResult?.onTruthy) {
         return this.executeOperation(operation.onResult.onTruthy, context);
