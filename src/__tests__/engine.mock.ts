@@ -112,3 +112,10 @@ export const mockOperationEnvContext: Operation = {
     numbers: [100, 50, '$ctx.env.number'],
   },
 };
+
+export const mockStringInterpolation: Operation = {
+  operator: 'eq',
+  args: {
+    comparison: ['/test/123', '/test/{{$ctx.data.number}}'],
+  },
+};

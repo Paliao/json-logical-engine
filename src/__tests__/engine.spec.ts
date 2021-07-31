@@ -10,6 +10,7 @@ import {
   mockOnResultOperation,
   mockOperationDataContext,
   mockOperationEnvContext,
+  mockStringInterpolation,
   mockValidEngineConfig,
 } from './engine.mock';
 
@@ -204,6 +205,12 @@ describe('Run nested operation', () => {
       const result = await engine.runOperation(mockOperationDataContext, { number: 50 });
 
       expect(result).toBe(200);
+    });
+
+    it('should use interpolation to return the correct result', async () => {
+      const result = await engine.runOperation(mockStringInterpolation, { number: 123 });
+
+      expect(result).toBe(true);
     });
 
     it('should be a valid nested operation using the provided data to the operation', async () => {

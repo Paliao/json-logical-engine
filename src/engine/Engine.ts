@@ -18,9 +18,13 @@ interface OperationContext {
   env: EngineConfig['env'];
 }
 
+// Matching the following pattern:
+// - {{$ctx.[...]}}
+export const interpolationRegex = /\{{([$ctx].*?)\}}/g;
+
 export class Engine {
-  config: EngineConfig;
-  operators: Record<string, Operator>;
+  protected config: EngineConfig;
+  private operators: Record<string, Operator>;
 
   constructor(operators: Record<string, Operator>, config: EngineConfig) {
     Engine.validateOperators(operators);
@@ -88,7 +92,7 @@ export class Engine {
     }
   }
 
-  private async executeOperation(operation: Operation, context: OperationContext): Promise<any> {
+  protected async executeOperation(operation: Operation, context: OperationContext): Promise<any> {
     const operator = this.operators[operation.operator];
     if (!operator) {
       throw new Error('Operator not found');
@@ -125,11 +129,14 @@ export class Engine {
     return result;
   }
 
-  async mountOperatorInput(args: any, context: OperationContext): Promise<Record<string, any>> {
+  protected async mountOperatorInput(args: any, context: OperationContext): Promise<any> {
     const argsType = typeof args;
 
     if (argsType === 'string') {
-      if (args.startsWith('$ctx.')) return get({ $ctx: { ...context, env: this.config.env } }, args);
+      const $ctx = { ...context, env: this.config.env };
+
+      if (args.startsWith('$ctx.')) return get({ $ctx }, args);
+      if (interpolationRegex.test(args)) return this.handleStringInterpolation(args, $ctx);
 
       return args;
     }
@@ -171,5 +178,24 @@ export class Engine {
     }
 
     return result;
+  }
+
+  protected handleStringInterpolation(str: string, context: OperationContext): string {
+    const foundVariables = str.match(interpolationRegex);
+
+    if (!foundVariables) return str;
+
+    for (const variable of foundVariables) {
+      const dynamicPath = variable.replace(/[{|}]/g, '');
+
+      const dynamicData = get({ $ctx: context }, dynamicPath);
+      const dynamicDataType = typeof dynamicData;
+
+      if (['number', 'string'].includes(dynamicDataType)) {
+        str = str.replace(variable, dynamicData);
+      }
+    }
+
+    return str;
   }
 }
