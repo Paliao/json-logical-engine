@@ -1,3 +1,4 @@
+import { defaultOperators } from './../operators/defaultOperators/index';
 import { mockTrueGtOperation } from './operations/numeric/numericComparations.mock';
 import { Engine } from '../engine';
 import {
@@ -9,6 +10,7 @@ import {
   mockOnResultOperation,
   mockOperationDataContext,
   mockOperationEnvContext,
+  mockStringInterpolation,
   mockValidEngineConfig,
 } from './engine.mock';
 
@@ -99,6 +101,62 @@ describe('Engine validators', () => {
   });
 });
 
+describe('Engine operators aux functions', () => {
+  const engine = new Engine({}, {});
+
+  it('Checks every default operation', () => {
+    const defaultOperatorsKeys = Object.keys(defaultOperators);
+    const engineOperationsKeys = engine.getOperatorList().map((op) => op.operator);
+
+    expect(defaultOperatorsKeys).toEqual(engineOperationsKeys);
+  });
+
+  it('Checks the addition of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const testOperator = {
+      name: 'test',
+      description: 'test',
+      handler: () => {},
+    };
+
+    engine2.addOperators({
+      testOperator,
+    });
+
+    const hasTestOperator = engine2.getOperatorList().some((op) => op.operator === 'testOperator');
+
+    expect(hasTestOperator).toBeTruthy();
+  });
+
+  it('Checks the addition of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const testOperator = {
+      name: 'test',
+      description: 'test',
+      handler: () => {},
+    };
+
+    engine2.addOperators({
+      testOperator,
+    });
+
+    const hasTestOperator = engine2.getOperatorList().some((op) => op.operator === 'testOperator');
+
+    expect(hasTestOperator).toBeTruthy();
+  });
+
+  it('Checks the removal of an operation', () => {
+    const engine2 = new Engine({}, {});
+
+    const availableOperators = engine2.getOperatorList().map((op) => op.operator);
+    engine2.removeOperators(availableOperators);
+
+    expect(engine2.getOperatorList().length).toBe(0);
+  });
+});
+
 describe('Engine run simple operation', () => {
   const engine = new Engine({}, {});
 
@@ -140,13 +198,19 @@ describe('Run nested operation', () => {
     it('should be a valid nested operation using the previous result', async () => {
       const result = await engine.runOperation(mockOnResultOperation);
 
-      expect(result).toBe(375);
+      expect(result).toBe(true);
     });
 
     it('should be a valid nested operation using the provided data to the operation', async () => {
       const result = await engine.runOperation(mockOperationDataContext, { number: 50 });
 
       expect(result).toBe(200);
+    });
+
+    it('should use interpolation to return the correct result', async () => {
+      const result = await engine.runOperation(mockStringInterpolation, { number: 123 });
+
+      expect(result).toBe(true);
     });
 
     it('should be a valid nested operation using the provided data to the operation', async () => {

@@ -14,13 +14,17 @@ interface OperationContext {
   prev: {
     args?: Record<string, any>;
     result?: any;
-  };
+  }[];
   env: EngineConfig['env'];
 }
 
+// Matching the following pattern:
+// - $ctx.[...]
+export const interpolationRegex = /(\$ctx)(\.\w+)+/g;
+
 export class Engine {
-  config: EngineConfig;
-  operators: Record<string, Operator>;
+  protected config: EngineConfig;
+  private operators: Record<string, Operator>;
 
   constructor(operators: Record<string, Operator>, config: EngineConfig) {
     Engine.validateOperators(operators);
@@ -54,15 +58,41 @@ export class Engine {
     }
   }
 
+  getOperatorList(): Record<'operator' | 'name' | 'description', string>[] {
+    const operators = Object.entries(this.operators);
+
+    return operators.map(([operatorKey, operator]) => ({
+      operator: operatorKey,
+      name: operator?.name ?? 'Name not provided',
+      description: operator?.description ?? 'Description not provided',
+    }));
+  }
+
+  addOperators(newOperators: Record<string, Operator>): void {
+    Engine.validateOperators(newOperators);
+
+    this.operators = { ...this.operators, ...newOperators };
+  }
+
+  removeOperators(operatorKeys: string[]): void {
+    const oldOperators = cloneDeep(this.operators);
+
+    for (const operatorKey of operatorKeys) {
+      delete oldOperators[operatorKey];
+    }
+
+    this.operators = oldOperators;
+  }
+
   public async runOperation(operation: Operation, dataSource: Record<string, any> = {}): Promise<any> {
     try {
-      return this.executeOperation(operation, { data: dataSource, env: this.config.env, prev: {} });
+      return this.executeOperation(operation, { data: dataSource, env: this.config.env, prev: [] });
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  private async executeOperation(operation: Operation, context: OperationContext): Promise<any> {
+  protected async executeOperation(operation: Operation, context: OperationContext): Promise<any> {
     const operator = this.operators[operation.operator];
     if (!operator) {
       throw new Error('Operator not found');
@@ -82,10 +112,13 @@ export class Engine {
 
     // Checking if we have nested operations
     if (operation.onResult?.onFalsy || operation.onResult?.onTruthy) {
-      set(context, ['prev'], {
+      const previous = cloneDeep(context.prev);
+      previous.unshift({
         result,
         args: input,
       });
+
+      set(context, ['prev'], previous);
 
       if (result && operation.onResult?.onTruthy) {
         return this.executeOperation(operation.onResult.onTruthy, context);
@@ -99,11 +132,14 @@ export class Engine {
     return result;
   }
 
-  async mountOperatorInput(args: any, context: OperationContext): Promise<Record<string, any>> {
+  protected async mountOperatorInput(args: any, context: OperationContext): Promise<any> {
     const argsType = typeof args;
 
     if (argsType === 'string') {
-      if (args.startsWith('$ctx.')) return get({ $ctx: { ...context, env: this.config.env } }, args);
+      const $ctx = { ...context, env: this.config.env };
+
+      if (args.startsWith('$ctx.')) return get({ $ctx }, args);
+      if (interpolationRegex.test(args)) return this.handleStringInterpolation(args, $ctx);
 
       return args;
     }
@@ -126,7 +162,6 @@ export class Engine {
     }
 
     const argsIsObject = isPlainObject(args);
-    // If it's not string, number, boolean, array nor object, is not an allowed type
     if (!argsIsObject) {
       throw new Error(`This type is not allowed ${args}`);
     }
@@ -146,5 +181,22 @@ export class Engine {
     }
 
     return result;
+  }
+
+  protected handleStringInterpolation(str: string, context: OperationContext): string {
+    const foundVariables = str.match(interpolationRegex);
+
+    if (!foundVariables) return str;
+
+    for (const variable of foundVariables) {
+      const dynamicData = get({ $ctx: context }, variable);
+      const dynamicDataType = typeof dynamicData;
+
+      if (['number', 'string'].includes(dynamicDataType)) {
+        str = str.replace(variable, dynamicData);
+      }
+    }
+
+    return str;
   }
 }

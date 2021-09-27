@@ -13,10 +13,6 @@ export interface Operator<Args = any> {
   // The operation itself
   handler: (args: Args) => any;
 
-  // If provided the engine will look in handle the operation as an async operation
-  // Defaults to false
-  isAsync?: boolean;
-
   // Will run a log of the result of all operations that use this operator, even if it is an error
   // Overwrites the engineConfig of "enableLogging"
   // Does not impact onSuccess nor onError
