@@ -13,7 +13,7 @@ We have 3 main components that you need to understand:
 ### Engine
 
 - The engine is the component that will run the operators with operations
-- Can be customized with a certain set of options like logging or custom operators
+- Can be customized with a certain set of options like logging or custom operators (TODO)
 
 ### Operators
 
@@ -38,7 +38,7 @@ We have a set of pre built opreators:
 `if:` If the operations  
 `eq:` Deep equality check  
 `neq:` Negation of the deep equality check  
-`or:` || Behaviour
+`or:` || Behaviour  
 `and:` && Behaviour
 
 ---
